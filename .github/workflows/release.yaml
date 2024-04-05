@@ -21,7 +21,7 @@ jobs:
             - name: "Build"
               run: |
                   wally install
-                  rojo build build.project.json -o Detections.rbxl
+                  rojo build -o Detections.rbxl
 
             - uses: "marvinpinto/action-automatic-releases@latest"
               with:
