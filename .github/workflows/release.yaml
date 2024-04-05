@@ -1,0 +1,33 @@
+name: "tagged-release"
+
+on:
+    push:
+        branches:
+            - "main"
+jobs:
+    tagged-release:
+        name: "Tagged Release"
+        runs-on: "ubuntu-latest"
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+
+            - uses: ok-nick/setup-aftman@v0.4.2
+              name: Setup Aftman
+              with:
+                  token: ${{ github.token }}
+
+            - name: "Build"
+              run: |
+                  wally install
+                  rojo build build.project.json -o Detections.rbxl
+
+            - uses: "marvinpinto/action-automatic-releases@latest"
+              with:
+                  repo_token: "${{ secrets.GITHUB_TOKEN }}"
+                  prerelease: false
+                  automatic_release_tag: "Latest"
+                  files: |
+                      Detections.rbxl
+                      LICENSE

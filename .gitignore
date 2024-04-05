@@ -2,3 +2,7 @@
 Packages
 *.lock
 sourcemap.json
+
+# Build Files
+*.rbxl*
+*.rbxm*
