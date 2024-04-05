@@ -7,3 +7,6 @@
 		- Vyon (https://github.com/Vyon/)
 
 -]==]
+
+-- Initialize Detections:
+require(script.SilentAim)

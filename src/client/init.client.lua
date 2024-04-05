@@ -12,9 +12,13 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- Folders:
 local NPCs = workspace.NPCs
+
+-- Remotes:
+local Shoot = ReplicatedStorage.Remotes.Shoot
 
 -- Locals:
 local Player = Players.LocalPlayer
@@ -24,19 +28,20 @@ local Camera = workspace.CurrentCamera
 -- Initialize "Cheats":
 require(script.Aimbot)
 require(script.ESP)
+require(script.SilentAim)
 
 -- Constants:
 local FPS = 60
 
 -- Variables:
 local BodyParts = {
-	"Head",
-	"HumanoidRootPart",
-	"Torso",
-	"Left Arm",
-	"Right Arm",
-	"Left Leg",
-	"Right Leg",
+	--"Head",
+	--"HumanoidRootPart",
+	--"Torso",
+	--"Left Arm",
+	--"Right Arm",
+	--"Left Leg",
+	--"Right Leg",
 }
 
 local Frame = 0
@@ -44,6 +49,30 @@ local DetectedAmount = 0
 
 -- Main:
 -- Connections:
+UserInputService.InputBegan:Connect(function(Input: InputObject, IsProcessedEvent: boolean)
+	if Input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+		return
+	end
+
+	repeat
+		local Origin = Camera.CFrame
+
+		local Direction = Origin.LookVector
+
+		for _, NPC: any in NPCs:GetChildren() do
+			local Head = NPC.Head
+
+			if _G.SILENT_AIM_TOGGLED then
+				Direction = (Head.Position - Origin.Position).Unit
+			end
+
+			Shoot:FireServer(Direction)
+		end
+
+		task.wait(0.1)
+	until not UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
+end)
+
 RunService.RenderStepped:Connect(function()
 	Frame += 1
 
